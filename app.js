@@ -1,21 +1,30 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const router = require("./routes/bookRoute");
-const cors = require("cors");
+const userRoutes = require("./routes/users");
+const authRoutes = require("./routes/auth");
+const dotenv = require('dotenv');
 const app = express();
+const cors = require("cors");
 
-// Middlewares
+
 app.use(express.json());
 app.use(cors());
+
+
+//routes
+app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/books", router); // localhost:5000/books
 
-mongoose.connect(
-    "mongodb+srv://admin:kagPUYSCGpFAYuxf@cluster0.cokjmr1.mongodb.net/bookStore?retryWrites=true&w=majority"
-)
-    .then(() => console.log("Server Connected"))
-    .then(() => {
-        app.listen(5000);
-    })
-    .catch((error) => console.log(error));
 
-// kagPUYSCGpFAYuxf
+//
+dotenv.config({path:'./.env'})
+PORT = process.env.PORT
+DB = process.env.db_con
+
+mongoose.connect(DB, ()=>console.log("database connected"))
+app.listen(PORT, ()=>console.log(`Server running on ${PORT}`))
+
+
+
